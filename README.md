@@ -87,4 +87,8 @@ my-app/
 
 ## Licencia
 
+<<<<<<< HEAD
 Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles. 
+=======
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles. 
+>>>>>>> 598acba (fixes types and format)
