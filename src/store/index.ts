@@ -1,3 +1,4 @@
+export { store } from './store';
 export {
   fetchPersonajes,
   searchPersonajes,

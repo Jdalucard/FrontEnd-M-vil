@@ -8,6 +8,7 @@ import { RootStackParamList } from '../../App';
 import { fetchPeliculas, searchPeliculas, resetPagePeliculas } from '../store/index';
 import { useAppDispatch, useAppSelector } from '../store/index';
 import { MainScreenContainer } from '../components/MainScreenContainer';
+import { useTheme } from '../theme/ThemeContext';
 
 type PeliculasScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Peliculas'>;
 
@@ -16,6 +17,7 @@ export const PeliculasScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const [searchQuery, setSearchQuery] = useState('');
   const { results, loading, error, next } = useAppSelector((state) => state.peliculas);
+  const { theme } = useTheme();
 
   useEffect(() => {
     if (searchQuery) {
@@ -44,8 +46,8 @@ export const PeliculasScreen: React.FC = () => {
   if (loading && results.length === 0) {
     return (
       <MainScreenContainer>
-        <View style={styles.container}>
-          <Text variant="body">Cargando...</Text>
+        <View style={[styles.container, { backgroundColor: theme.background }]}>
+          <Text variant="body" style={{ color: theme.text }}>Cargando...</Text>
         </View>
       </MainScreenContainer>
     );
@@ -54,8 +56,8 @@ export const PeliculasScreen: React.FC = () => {
   if (error) {
     return (
       <MainScreenContainer>
-        <View style={styles.container}>
-          <Text variant="body">Error al cargar las películas</Text>
+        <View style={[styles.container, { backgroundColor: theme.background }]}>
+          <Text variant="body" style={{ color: theme.text }}>Error al cargar las películas</Text>
         </View>
       </MainScreenContainer>
     );
@@ -63,30 +65,38 @@ export const PeliculasScreen: React.FC = () => {
 
   return (
     <MainScreenContainer>
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
         <TextInput
-          style={styles.searchInput}
+          style={[styles.searchInput, { 
+            backgroundColor: theme.cardBackground,
+            borderColor: theme.border,
+            color: theme.text,
+          }]}
           placeholder="Buscar película..."
+          placeholderTextColor={theme.textSecondary}
           value={searchQuery}
           onChangeText={handleSearch}
         />
         <FlatList
           data={results}
-          renderItem={({ item }) => (
-            <View style={styles.peliculaCard}>
-              <Text variant="title" onPress={() => handlePeliculaPress(item)}>
-                {item.title}
+          renderItem={({ item, index }) => (
+            <View style={[styles.peliculaCard, { 
+              backgroundColor: theme.cardBackground,
+              borderColor: theme.border,
+            }]}>
+              <Text variant="title" style={{ color: theme.text, fontWeight: 'bold' }} onPress={() => handlePeliculaPress(item)}>
+                {item.titulo}
               </Text>
-              <Text variant="body">Episodio {item.episode_id}</Text>
-              <Text variant="body">Director: {item.director}</Text>
-              <Text variant="body">Fecha de lanzamiento: {item.release_date}</Text>
+              <Text variant="body" style={{ color: theme.text }}>Episodio {item.episodioId}</Text>
+              <Text variant="body" style={{ color: theme.textSecondary }}>Director: {item.director}</Text>
+              <Text variant="body" style={{ color: theme.textSecondary }}>Fecha de lanzamiento: {item.fechaLanzamiento}</Text>
             </View>
           )}
-          keyExtractor={(item) => item.url}
+          keyExtractor={(_, index) => `pelicula-${index + 1}`}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
           ListEmptyComponent={
-            <Text variant="body" style={styles.emptyText}>
+            <Text variant="body" style={[styles.emptyText, { color: theme.text }]}>
               No se encontraron películas
             </Text>
           }
@@ -99,18 +109,14 @@ export const PeliculasScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   searchInput: {
-    backgroundColor: '#fff',
     padding: 12,
     margin: 16,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#ddd',
   },
   peliculaCard: {
-    backgroundColor: '#fff',
     padding: 16,
     margin: 8,
     borderRadius: 8,

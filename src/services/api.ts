@@ -10,7 +10,6 @@ const api = axios.create({
 
 export const getPeople = async (page: number = 1): Promise<ApiResponse<Persona>> => {
   const response = await api.get(`/people/?page=${page}`);
-  console.log(response.data);
   return {
     ...response.data,
     results: response.data.results.map(translatePersona),

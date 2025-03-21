@@ -1,12 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
-import {
-  personajesReducer,
-  peliculasReducer,
-  planetasReducer,
-  PersonajesState,
-  PeliculasState,
-  PlanetasState,
-} from './index';
+import personajesReducer from './personajesSlice';
+import peliculasReducer from './peliculasSlice';
+import planetasReducer from './planetasSlice';
 
 export const store = configureStore({
   reducer: {
@@ -16,9 +11,5 @@ export const store = configureStore({
   },
 });
 
-export type RootState = {
-  personajes: PersonajesState;
-  peliculas: PeliculasState;
-  planetas: PlanetasState;
-};
+export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

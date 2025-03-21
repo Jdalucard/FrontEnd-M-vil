@@ -8,6 +8,7 @@ import { RootStackParamList } from '../../App';
 import { fetchPlanetas, searchPlanetas, resetPagePlanetas } from '../store/index';
 import { useAppDispatch, useAppSelector } from '../store/index';
 import { MainScreenContainer } from '../components/MainScreenContainer';
+import { useTheme } from '../theme/ThemeContext';
 
 type PlanetasScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Planetas'>;
 
@@ -16,14 +17,13 @@ export const PlanetasScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const [searchQuery, setSearchQuery] = useState('');
   const { results, loading, error, next } = useAppSelector((state) => state.planetas);
+  const { theme } = useTheme();
 
   useEffect(() => {
     if (searchQuery) {
-      console.log('Buscando planetas con query:', searchQuery);
       dispatch(resetPagePlanetas());
       dispatch(searchPlanetas(searchQuery));
     } else {
-      console.log('Cargando página inicial de planetas');
       dispatch(resetPagePlanetas());
       dispatch(fetchPlanetas(1));
     }
@@ -46,8 +46,8 @@ export const PlanetasScreen: React.FC = () => {
   if (loading && results.length === 0) {
     return (
       <MainScreenContainer>
-        <View style={styles.container}>
-          <Text variant="body">Cargando...</Text>
+        <View style={[styles.container, { backgroundColor: theme.background }]}>
+          <Text variant="body" style={{ color: theme.text }}>Cargando...</Text>
         </View>
       </MainScreenContainer>
     );
@@ -56,8 +56,8 @@ export const PlanetasScreen: React.FC = () => {
   if (error) {
     return (
       <MainScreenContainer>
-        <View style={styles.container}>
-          <Text variant="body">Error al cargar los planetas</Text>
+        <View style={[styles.container, { backgroundColor: theme.background }]}>
+          <Text variant="body" style={{ color: theme.text }}>Error al cargar los planetas</Text>
         </View>
       </MainScreenContainer>
     );
@@ -65,30 +65,38 @@ export const PlanetasScreen: React.FC = () => {
 
   return (
     <MainScreenContainer>
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
         <TextInput
-          style={styles.searchInput}
+          style={[styles.searchInput, { 
+            backgroundColor: theme.cardBackground,
+            borderColor: theme.border,
+            color: theme.text,
+          }]}
           placeholder="Buscar planeta..."
+          placeholderTextColor={theme.textSecondary}
           value={searchQuery}
           onChangeText={handleSearch}
         />
         <FlatList
           data={results}
-          renderItem={({ item }) => (
-            <View style={styles.planetaCard}>
-              <Text variant="title" onPress={() => handlePlanetaPress(item)}>
+          renderItem={({ item, index }) => (
+            <View style={[styles.planetaCard, { 
+              backgroundColor: theme.cardBackground,
+              borderColor: theme.border,
+            }]}>
+              <Text variant="title" style={{ color: theme.text, fontWeight: 'bold' }} onPress={() => handlePlanetaPress(item)}>
                 {item.nombre}
               </Text>
-              <Text variant="body">Clima: {item.clima}</Text>
-              <Text variant="body">Terreno: {item.terreno}</Text>
-              <Text variant="body">Población: {item.poblacion}</Text>
+              <Text variant="body" style={{ color: theme.text }}>Clima: {item.clima}</Text>
+              <Text variant="body" style={{ color: theme.textSecondary }}>Terreno: {item.terreno}</Text>
+              <Text variant="body" style={{ color: theme.textSecondary }}>Población: {item.poblacion}</Text>
             </View>
           )}
-          keyExtractor={(item) => item.url}
+          keyExtractor={(_, index) => `planeta-${index + 1}`}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
           ListEmptyComponent={
-            <Text variant="body" style={styles.emptyText}>
+            <Text variant="body" style={[styles.emptyText, { color: theme.text }]}>
               No se encontraron planetas
             </Text>
           }
@@ -101,18 +109,14 @@ export const PlanetasScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   searchInput: {
-    backgroundColor: '#fff',
     padding: 12,
     margin: 16,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#ddd',
   },
   planetaCard: {
-    backgroundColor: '#fff',
     padding: 16,
     margin: 8,
     borderRadius: 8,

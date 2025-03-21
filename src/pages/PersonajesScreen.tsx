@@ -9,6 +9,7 @@ import { RootStackParamList } from '../../App';
 import { fetchPersonajes, searchPersonajes, resetPagePersonajes } from '../store/index';
 import { useAppDispatch, useAppSelector } from '../store/index';
 import { MainScreenContainer } from '../components/MainScreenContainer';
+import { useTheme } from '../theme/ThemeContext';
 
 type PersonajesScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Personajes'>;
 
@@ -17,6 +18,7 @@ export const PersonajesScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const [searchQuery, setSearchQuery] = useState('');
   const { results, loading, error, next } = useAppSelector((state) => state.personajes);
+  const { theme } = useTheme();
 
   useEffect(() => {
     if (searchQuery) {
@@ -45,8 +47,8 @@ export const PersonajesScreen: React.FC = () => {
   if (loading && results.length === 0) {
     return (
       <MainScreenContainer>
-        <View style={styles.container}>
-          <Text variant="body">Cargando...</Text>
+        <View style={[styles.container, { backgroundColor: theme.background }]}>
+          <Text variant="body" style={{ color: theme.text }}>Cargando...</Text>
         </View>
       </MainScreenContainer>
     );
@@ -55,8 +57,8 @@ export const PersonajesScreen: React.FC = () => {
   if (error) {
     return (
       <MainScreenContainer>
-        <View style={styles.container}>
-          <Text variant="body">Error al cargar los personajes</Text>
+        <View style={[styles.container, { backgroundColor: theme.background }]}>
+          <Text variant="body" style={{ color: theme.text }}>Error al cargar los personajes</Text>
         </View>
       </MainScreenContainer>
     );
@@ -64,10 +66,15 @@ export const PersonajesScreen: React.FC = () => {
 
   return (
     <MainScreenContainer>
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
         <TextInput
-          style={styles.searchInput}
+          style={[styles.searchInput, { 
+            backgroundColor: theme.cardBackground,
+            borderColor: theme.border,
+            color: theme.text,
+          }]}
           placeholder="Buscar personaje..."
+          placeholderTextColor={theme.textSecondary}
           value={searchQuery}
           onChangeText={handleSearch}
         />
@@ -76,11 +83,11 @@ export const PersonajesScreen: React.FC = () => {
           renderItem={({ item, index }) => (
             <PersonaCard persona={item} onPress={handlePersonaPress} />
           )}
-          keyExtractor={(_, index) => `persona-${index}`}
+          keyExtractor={(_, index) => `persona-${index + 1}`}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
           ListEmptyComponent={
-            <Text variant="body" style={styles.emptyText}>
+            <Text variant="body" style={[styles.emptyText, { color: theme.text }]}>
               No se encontraron personajes
             </Text>
           }
@@ -93,15 +100,12 @@ export const PersonajesScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   searchInput: {
-    backgroundColor: '#fff',
     padding: 12,
     margin: 16,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#ddd',
   },
   emptyText: {
     textAlign: 'center',
