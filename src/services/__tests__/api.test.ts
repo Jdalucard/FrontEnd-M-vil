@@ -3,6 +3,7 @@ import { getPeople, searchPeople, getFilms, searchFilms, getPlanets, searchPlane
 import { translatePersona, translatePelicula, translatePlaneta } from '../../utils/translations';
 
 jest.mock('axios');
+const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 jest.mock('../../utils/translations', () => ({
   translatePersona: jest.fn((person) => person),
@@ -17,7 +18,7 @@ describe('API Tests', () => {
     mockInstance = {
       get: jest.fn(),
     };
-    (axios.create as jest.Mock).mockReturnValue(mockInstance);
+    mockedAxios.create.mockReturnValue(mockInstance as any);
   });
 
   afterEach(() => {

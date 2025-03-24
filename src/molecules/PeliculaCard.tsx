@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import { Text } from '../atoms/Text';
-import { Pelicula } from '../types';
+import type { Pelicula } from '../types';
 
 interface PeliculaCardProps {
   pelicula: Pelicula;

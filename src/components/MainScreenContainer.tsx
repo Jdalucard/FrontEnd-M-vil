@@ -4,7 +4,7 @@ import { BottomNavigation } from './BottomNavigation';
 import { useTheme } from '../theme/ThemeContext';
 
 interface MainScreenContainerProps {
-  children: React.ReactNode;
+  children: React.ReactNode; 
 }
 
 export const MainScreenContainer: React.FC<MainScreenContainerProps> = ({ children }) => {

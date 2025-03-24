@@ -13,15 +13,15 @@ export interface Theme {
 }
 
 const lightTheme: Theme = {
-  primary: '#1E3D59', // Azul oscuro de Star Wars
+  primary: '#1E3D59', 
   background: '#F5F5F5',
-  cardBackground: '#FFFFFF', // Fondo blanco para las tarjetas en modo claro
-  text: '#000000', // Negro para mejor contraste en modo claro
-  textSecondary: '#666666', // Texto gris oscuro para modo claro
-  border: '#2C5A7A', // Borde azul más claro
+  cardBackground: '#FFFFFF', 
+  text: '#000000', 
+  textSecondary: '#666666', 
+  border: '#2C5A7A', 
   tabBarBackground: '#1E3D59',
   tabBarActive: '#FFFFFF',
-  tabBarInactive: '#FFFFFF', // Cambiado a blanco para el texto no seleccionado
+  tabBarInactive: '#FFFFFF', 
 };
 
 const darkTheme: Theme = {
